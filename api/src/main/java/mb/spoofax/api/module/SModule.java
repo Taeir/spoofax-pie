@@ -3,15 +3,7 @@ package mb.spoofax.api.module;
 import java.io.Serializable;
 import java.util.List;
 
-public interface SModule<Key> extends Serializable {
-    /**
-     * This method returns the key of the module. This is the (unique) identifier for the module.
-     *
-     * @return
-     *      the key of this module
-     */
-    public Key getKey();
-
+public interface SModule extends Serializable {
     /**
      * This method returns the full identifier for this module.
      *

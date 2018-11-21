@@ -3,39 +3,29 @@ package mb.spoofax.api.module;
 import mb.spoofax.api.module.payload.Payload;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SingleFileModuleImpl<Key> implements SingleFileModule<Key> {
-    private Key key;
-    private String language;
+public class SingleFileModuleImpl implements SingleFileModule {
     private File file;
     private LanguageModuleKey lmk;
 
-    private Map<String, Payload<Key>> payloads = new HashMap<>();
+    private Map<String, Payload> payloads = new HashMap<>();
 
     /**
      * A base module for the given file with the given key.
      *
-     * @param key
-     *      the key of the module
      * @param lmk
      *      the language module key
      * @param file
      *      the file of the module
      */
-    public SingleFileModuleImpl(Key key, LanguageModuleKey lmk, File file) {
-        this.key  = key;
+    public SingleFileModuleImpl(LanguageModuleKey lmk, File file) {
+        this.lmk = lmk;
         //TODO Determine the ID from the file, based on the offset from the project root?
         this.file = file;
-        this.lmk = lmk;
-    }
 
-    @Override
-    public Key getKey() {
-        return key;
     }
 
     @Override
@@ -45,7 +35,7 @@ public class SingleFileModuleImpl<Key> implements SingleFileModule<Key> {
 
     @Override
     public String getLanguage() {
-        return language;
+        return lmk.getLanguage();
     }
 
     @Override
@@ -54,7 +44,7 @@ public class SingleFileModuleImpl<Key> implements SingleFileModule<Key> {
     }
 
     @Override
-    public Map<String, Payload<Key>> getPayloads() {
+    public Map<String, Payload> getPayloads() {
         return payloads;
     }
 

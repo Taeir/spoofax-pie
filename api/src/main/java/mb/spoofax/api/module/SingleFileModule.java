@@ -5,7 +5,7 @@ import mb.spoofax.api.module.payload.Payload;
 import java.io.File;
 import java.util.Map;
 
-public interface SingleFileModule<Key> extends SModule<Key> {
+public interface SingleFileModule extends SModule {
     /**
      * The language of this module.
      * This method can return null if the language of this module is unknown.
@@ -34,7 +34,7 @@ public interface SingleFileModule<Key> extends SModule<Key> {
      * @return
      *      a Map with all payloads that this module currently has available
      */
-    public Map<String, Payload<Key>> getPayloads();
+    public Map<String, Payload> getPayloads();
 
     /**
      * Gets the payload of a specific type.
@@ -48,7 +48,7 @@ public interface SingleFileModule<Key> extends SModule<Key> {
      *      the payload with the given type, or null if this payload does not exist yet
      */
     @SuppressWarnings("unchecked")
-    public default <T extends Payload<Key>> T getPayload(String type) {
+    public default <T extends Payload> T getPayload(String type) {
         return (T) getPayloads().get(type);
     }
 
@@ -70,7 +70,7 @@ public interface SingleFileModule<Key> extends SModule<Key> {
      * @param payload
      *      the payload
      */
-    public default void addPayload(Payload<Key> payload)  {
+    public default void addPayload(Payload payload)  {
         getPayloads().put(payload.getType(), payload);
     }
 
@@ -80,7 +80,7 @@ public interface SingleFileModule<Key> extends SModule<Key> {
      * @param payload
      *      the payload to remove
      */
-    public default void removePayload(Payload<Key> payload) {
+    public default void removePayload(Payload payload) {
         getPayloads().remove(payload.getType(), payload);
     }
 
