@@ -79,4 +79,23 @@ public class LanguageModuleKey extends ModuleKey {
     public String toString() {
         return getPath();
     }
+
+    /**
+     * This method compares the given module keys and returns if they are equal when their languages are ignored.
+     *
+     * @param a
+     *      the first module key
+     * @param b
+     *      the second module key
+     *
+     * @return
+     *      if the given module keys are equal when ignoring their languages
+     */
+    public static boolean equalsLanguageAgnostic(ModuleKey a, ModuleKey b) {
+        if (a == b) return true;
+        if (a == null || b == null) return false;
+        if (!a.name.equals(b.name)) return false;
+
+        return equalsLanguageAgnostic(a.parent, b.parent);
+    }
 }

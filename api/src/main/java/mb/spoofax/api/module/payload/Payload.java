@@ -1,31 +1,29 @@
 package mb.spoofax.api.module.payload;
 
+import mb.spoofax.api.module.ModuleKey;
 import mb.spoofax.api.module.SingleFileModule;
 
 import java.io.Serializable;
 
 /**
  * Interface to represent module payloads. For example, Text is a payload that a module can have.
- *
- * @param <Key>
- *      the type of unique identifiers for modules
  */
-public interface Payload<Key> extends Serializable {
+public interface Payload extends Serializable {
     /**
-     * This method returns the key of the module. This is the (unique) identifier for the module.
+     * This method returns the id of the module. This is the (unique) identifier for the module.
      *
      * @return
      *      the key of this module
      */
-    public default Key getKey() {
-        return getModule().getKey();
+    public default ModuleKey getId() {
+        return getModule().getId();
     }
 
     /**
      * @return
      *      the module this payload belongs to
      */
-    public SingleFileModule<Key> getModule();
+    public SingleFileModule getModule();
 
     /**
      * The language of this payload.
@@ -34,7 +32,9 @@ public interface Payload<Key> extends Serializable {
      * @return
      *      the source language of this payload
      */
-    public String getLanguage();
+    public default String getLanguage() {
+        return getModule().getLanguage();
+    }
 
     /**
      * @return

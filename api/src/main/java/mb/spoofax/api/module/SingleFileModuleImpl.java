@@ -1,45 +1,38 @@
 package mb.spoofax.api.module;
 
+import mb.pie.vfs.path.PPath;
 import mb.spoofax.api.module.payload.Payload;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SingleFileModuleImpl implements SingleFileModule {
-    private File file;
-    private LanguageModuleKey lmk;
+    private PPath file;
+    private LanguageModuleKey key;
 
     private Map<String, Payload> payloads = new HashMap<>();
+    private Set<ModuleKey> dependencies = new HashSet<>();
 
     /**
      * A base module for the given file with the given key.
      *
-     * @param lmk
+     * @param key
      *      the language module key
      * @param file
      *      the file of the module
      */
-    public SingleFileModuleImpl(LanguageModuleKey lmk, File file) {
-        this.lmk = lmk;
+    public SingleFileModuleImpl(LanguageModuleKey key, PPath file) {
+        this.key = key;
         //TODO Determine the ID from the file, based on the offset from the project root?
         this.file = file;
-
     }
 
     @Override
     public LanguageModuleKey getId() {
-        return lmk;
+        return key;
     }
 
     @Override
-    public String getLanguage() {
-        return lmk.getLanguage();
-    }
-
-    @Override
-    public File getFile() {
+    public PPath getFile() {
         return file;
     }
 
@@ -48,14 +41,9 @@ public class SingleFileModuleImpl implements SingleFileModule {
         return payloads;
     }
 
-    /**
-     * @return a list of module keys this module depends on
-     */
     @Override
-    public List<ModuleKey> getDependencies() {
+    public Set<ModuleKey> getDependencies() {
         //TODO Dependencies need to be identified in one of the steps and then added here.
-        return null;
+        return dependencies;
     }
-
-
 }
