@@ -1,10 +1,15 @@
 package mb.spoofax.api.module.payload;
 
-import mb.spoofaxmodules.SModule;
+import mb.spoofax.api.module.SModule;
+import mb.spoofax.api.module.SingleFileModule;
 
-public abstract class PrettyPrintedPayload<Key> extends TextPayload<Key> {
+public abstract class PrettyPrintedPayload extends TextPayload {
 
-    public PrettyPrintedPayload(SModule<Key> module) {
+    public PrettyPrintedPayload(SModule module, String text) {
+        super(module, text);
+    }
+
+    public PrettyPrintedPayload(SingleFileModule module) {
         super(module);
     }
 
