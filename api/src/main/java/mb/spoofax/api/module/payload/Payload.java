@@ -1,7 +1,7 @@
 package mb.spoofax.api.module.payload;
 
 import mb.spoofax.api.module.ModuleKey;
-import mb.spoofax.api.module.SingleFileModule;
+import mb.spoofax.api.module.SModule;
 
 import java.io.Serializable;
 
@@ -23,7 +23,7 @@ public interface Payload extends Serializable {
      * @return
      *      the module this payload belongs to
      */
-    public SingleFileModule getModule();
+    public SModule getModule();
 
     /**
      * The language of this payload.

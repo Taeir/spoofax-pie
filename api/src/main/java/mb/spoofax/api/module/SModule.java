@@ -51,4 +51,13 @@ public interface SModule extends Serializable {
     public default void removeDependency(ModuleKey module) {
         getDependencies().remove(module);
     }
+
+    /**
+     * Returns the language of this module, if this modules has a single identifiable language.
+     * If this module has multiple languages or if the language is not known, this method returns null.
+     *
+     * @return
+     *      the language of this module
+     */
+    public String getLanguage();
 }
