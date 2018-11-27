@@ -28,9 +28,10 @@
     <module>lang/cfg/langspec</module>
     <module>lang/cfg/example</module>
     <module>lang/cfg/test</module>
-    <!--module>pie.eclipse</module-->
-    <!--module>pie.eclipse.externaldeps</module-->
+	<!--<module>pie.eclipse</module>-->
+    <!--<module>pie.eclipse.externaldeps</module>-->
     <module>examples/simple</module>
+    <module>module/pipeline</module>
   </modules>
 
   <build>

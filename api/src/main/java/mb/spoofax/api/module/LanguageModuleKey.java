@@ -36,7 +36,7 @@ public class LanguageModuleKey extends ModuleKey {
      *      the language
      */
     public LanguageModuleKey(String path, String language) {
-        super(path);
+        super(genName(path), genParent(path, language));
         this.language = language;
     }
 
@@ -97,5 +97,43 @@ public class LanguageModuleKey extends ModuleKey {
         if (!a.name.equals(b.name)) return false;
 
         return equalsLanguageAgnostic(a.parent, b.parent);
+    }
+
+    /**
+     * Determines the name of a module from a path.
+     *
+     * @param path
+     *      the path
+     *
+     * @return
+     *      the name component of the path
+     */
+    private static String genName(String path) {
+        String[] parts = path.split(PATH_SEPARATOR, 2);
+        if (parts.length == 1) {
+            return parts[0];
+        } else {
+            return parts[1];
+        }
+    }
+
+    /**
+     * Determines the parent from a path.
+     *
+     * @param path
+     *      the path
+     * @param language
+     *      the language
+     *
+     * @return
+     *      the parent of the path
+     */
+    private static LanguageModuleKey genParent(String path, String language) {
+        String[] parts = path.split(PATH_SEPARATOR, 2);
+        if (parts.length == 1) {
+            return null;
+        } else {
+            return new LanguageModuleKey(parts[0], language);
+        }
     }
 }

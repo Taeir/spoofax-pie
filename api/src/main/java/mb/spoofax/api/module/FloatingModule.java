@@ -4,9 +4,9 @@ import mb.spoofax.api.module.payload.IPayloadable;
 
 /**
  * A floating module is a module that has representations, but is not bound to any physical file or URL or other location.
- * A floating module has a language associated with it.</p>
+ * A floating module has a language associated with it.
  *
- * Floating modules have the following properties:
+ * <p>Floating modules have the following properties:
  * <ul>
  *     <li>identifier: LanguageModuleKey</li>
  *     <li>payloads: The different representations</li>

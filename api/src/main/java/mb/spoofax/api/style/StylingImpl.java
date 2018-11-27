@@ -36,4 +36,10 @@ public class StylingImpl implements Styling {
         final StylingImpl other = (StylingImpl) obj;
         return stylePerToken.equals(other.stylePerToken);
     }
+
+    //TODO TAICO EDIT
+    @Override
+    public String toString() {
+        return "Styling(" + stylePerToken.toString() + ")";
+    }
 }

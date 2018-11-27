@@ -40,8 +40,8 @@ public class ModuleKey implements Serializable {
             this.name = path;
             this.parent = null;
         } else {
-            this.name = parts[0];
-            this.parent = new ModuleKey(parts[1]);
+            this.name = parts[1];
+            this.parent = new ModuleKey(parts[0]);
         }
     }
 

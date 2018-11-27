@@ -3,8 +3,14 @@ package mb.spoofax.pie.legacy
 import mb.log.api.Logger
 import mb.pie.api.ExecContext
 import mb.pie.api.stamp.FileStamper
+import mb.pie.api.stamp.FileStampers
 import mb.pie.lang.runtime.util.Tuple3
 import mb.pie.vfs.path.PPath
+import mb.pie.vfs.path.PPathImpl
+import mb.spoofax.api.module.LanguageModuleKey
+import mb.spoofax.api.module.ModuleManager
+import mb.spoofax.api.module.SingleFileModuleImpl
+import mb.spoofax.api.module.payload.ASTPayload
 import org.apache.commons.vfs2.FileObject
 import org.metaborg.core.action.ITransformGoal
 import org.metaborg.core.analysis.AnalysisException
@@ -49,16 +55,16 @@ fun ExecContext.processAll(
   // Read input files.
   val inputUnits = files.mapNotNull { file ->
     require(file, reqFileStamper)
-    if(!file.exists()) {
+    if (!file.exists()) {
       log?.warn("File $file does not exist, skipping")
       null
-    } else if(file.isDir) {
+    } else if (file.isDir) {
       log?.warn("Path $file is a directory, skipping")
       null
     } else {
       val resource = file.fileObject
       val langImpl = spoofax.languageIdentifierService.identify(resource, project)
-      if(langImpl == null) {
+      if (langImpl == null) {
         log?.warn("Cannot identify language of $file, skipping")
         null
       } else {
@@ -68,8 +74,41 @@ fun ExecContext.processAll(
       }
     }
   }
+
+  val workspacePath = project?.path?.parent()
+
+  //Create modules for files
+  val modules = inputUnits.map { iunit ->
+    val path = iunit.source()!!.pPath
+    val lang = iunit.langImpl().id()
+
+    val relPath = if (workspacePath != null) workspacePath.relativizeStringFrom(path) else path.toString()
+    val modKey = LanguageModuleKey(relPath, lang.id)
+
+    println("TAICO: Identified module \"${modKey.path}\", file=$path, language=$lang, short language=${lang.id}")
+
+
+    var mod = ModuleManager.getInstance().getModule(modKey)
+    if (mod != null) {
+      mod
+    } else {
+      mod = SingleFileModuleImpl(modKey, path)
+      //TODO Not sure if the current task should generate these files
+      generate(PPathImpl(mod.moduleFile.toPath()), FileStampers.modified)
+      mod
+    }
+
+  }
+
+  println("TAICO: Adding modules")
+  ModuleManager.getInstance().addModules(modules)
+
+  println("TAICO: Saving modules")
+  ModuleManager.getInstance().saveModules()
+
   val langImpls = inputUnits.map { it.langImpl() }.toHashSet()
 
+  println("TAICO: Going to add dependencies on parse tables")
   // Parsing.
   // Require parse table.
   langImpls.forEach { langImpl ->
@@ -81,6 +120,8 @@ fun ExecContext.processAll(
       }
     }
   }
+
+  println("TAICO: I am going to start parsing everything")
   // Create input units.
   // Do actual parsing.
   val parseUnits = try {
@@ -90,11 +131,18 @@ fun ExecContext.processAll(
     return arrayListOf()
   }
 
+  //Create parse payloads
+  parseUnits.map { it.ast() }.zip(modules).forEach { ASTPayload(it.second, it.first) }
+
+  //TODO TAICO return parse payloads instead?
   if(!analyze && transformGoal == null) {
+    println("TAICO: I am not going to continue after the parse step")
     return parseUnits.map {
       ProcessOutput(it.ast(), null, it.input().source()!!.pPath)
     }.toCollection(arrayListOf())
   }
+
+  println("TAICO: Continuing after parse step to do analysis/transformation")
 
   // Require Stratego runtime files for analysis and transformation.
   langImpls.forEach { langImpl ->
@@ -125,6 +173,7 @@ fun ExecContext.processAll(
     perContext
   }
 
+  if (analyze) println("TAICO: Going to analyze the ASTs")
   // Perform analysis
   val analyzeUnitsPerContext = if(analyze) {
     val perContext = hashMapOf<IContext, MutableCollection<ISpoofaxAnalyzeUnit>>()
@@ -148,6 +197,8 @@ fun ExecContext.processAll(
   } else {
     null
   }
+
+  if (transformGoal != null) println("TAICO: Going to transform the parsed/analyzed units")
 
   // Perform transformation
   if(transformGoal != null) {

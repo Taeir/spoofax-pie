@@ -1,5 +1,7 @@
 package mb.spoofax.api.module;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -60,4 +62,24 @@ public interface SModule extends Serializable {
      *      the language of this module
      */
     public String getLanguage();
+
+    /**
+     * Saves this module to file.
+     *
+     * @throws IOException
+     *      If saving fails.
+     */
+    public default void save() throws IOException {
+        ModuleManager.getInstance().saveModule(this);
+    }
+
+    /**
+     * @return
+     *      the file where this module is stored
+     *
+     * @see ModuleManager#getModuleFile(SModule)
+     */
+    public default File getModuleFile() {
+        return ModuleManager.getInstance().getModuleFile(this);
+    }
 }

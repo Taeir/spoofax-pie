@@ -3,7 +3,7 @@ package mb.spoofax.api.module.payload;
 import mb.spoofax.api.module.SModule;
 import org.spoofax.interpreter.terms.IStrategoTerm;
 
-public abstract class ASTPayload extends BasePayload {
+public class ASTPayload extends BasePayload {
     private IStrategoTerm ast;
 
     public ASTPayload(SModule module, IStrategoTerm ast) {
@@ -23,9 +23,15 @@ public abstract class ASTPayload extends BasePayload {
      * @return
      *      the pretty printed ASTPayload
      */
-    public abstract PrettyPrintedPayload prettyPrint();
+    public PrettyPrintedPayload prettyPrint() {
+        //TODO
+        return null;
+    }
 
-    public abstract TSGPayload analyzeScopeGraph();
+    public TSGPayload analyzeScopeGraph() {
+        //TODO
+        return null;
+    }
 
     /**
      * @return

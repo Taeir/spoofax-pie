@@ -1,10 +1,6 @@
 package mb.spoofax.api.module;
 
-import mb.spoofax.api.module.payload.Payload;
-
-import java.io.File;
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public class ProjectModuleImpl implements ProjectModule {
     private ModuleKey id;
@@ -18,7 +14,7 @@ public class ProjectModuleImpl implements ProjectModule {
     }
 
     @Override
-    public List<ModuleKey> getDependencies() {
+    public Set<ModuleKey> getDependencies() {
         return null;
     }
 }
