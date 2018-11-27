@@ -2,6 +2,7 @@ package mb.spoofax.api;
 
 import com.google.common.collect.Lists;
 import com.google.inject.*;
+import com.google.inject.Module;
 import java.util.Collection;
 import mb.pie.vfs.path.PathSrv;
 
