@@ -78,6 +78,7 @@ fun ExecContext.processAll(
   val workspacePath = project?.path?.parent()
 
   //Create modules for files
+  println("TAICO: Current modules in module manager: " + ModuleManager.getInstance().allModules.values.map { it.id })
   val modules = inputUnits.map { iunit ->
     val path = iunit.source()!!.pPath
     val lang = iunit.langImpl().id()
@@ -85,23 +86,24 @@ fun ExecContext.processAll(
     val relPath = if (workspacePath != null) workspacePath.relativizeStringFrom(path) else path.toString()
     val modKey = LanguageModuleKey(relPath, lang.id)
 
-    println("TAICO: Identified module \"${modKey.path}\", file=$path, language=$lang, short language=${lang.id}")
+
 
 
     var mod = ModuleManager.getInstance().getModule(modKey)
     if (mod != null) {
+      println("TAICO: Identified [existing] module \"${modKey.path}\", file=$path, language=$lang, short language=${lang.id}")
       mod
     } else {
+      println("TAICO: Identified [non-existing] module \"${modKey.path}\", file=$path, language=$lang, short language=${lang.id}")
+      println("TAICO: Creating module ${modKey.path}")
       mod = SingleFileModuleImpl(modKey, path)
+      println("TAICO: Adding module $modKey to the module manager.")
+      ModuleManager.getInstance().addModule(mod)
       //TODO Not sure if the current task should generate these files
-      generate(PPathImpl(mod.moduleFile.toPath()), FileStampers.modified)
+      //generate(PPathImpl(mod.moduleFile.toPath()), FileStampers.hash)
       mod
     }
-
   }
-
-  println("TAICO: Adding modules")
-  ModuleManager.getInstance().addModules(modules)
 
   println("TAICO: Saving modules")
   ModuleManager.getInstance().saveModules()

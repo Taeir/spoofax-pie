@@ -4,6 +4,7 @@ import mb.spoofax.api.module.SModule;
 import mb.spoofax.api.module.SingleFileModule;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 public class TextPayload extends BasePayload {
@@ -42,7 +43,8 @@ public class TextPayload extends BasePayload {
         if (text != null) return text;
         SModule module = getModule();
         if (module instanceof SingleFileModule) {
-            return Files.readString(((SingleFileModule) module).getFile().getJavaPath());
+            byte[] bytes = ((SingleFileModule) module).getFile().readAllBytes();
+            return new String(bytes, StandardCharsets.UTF_8);
         }
         //TODO Implement something for a file.
         throw new IllegalStateException("Module type should have a file.");

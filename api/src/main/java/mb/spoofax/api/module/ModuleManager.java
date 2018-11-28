@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +39,15 @@ public class ModuleManager {
         return modules.get(key);
     }
 
+    public SModule getModuleOrCreate(LanguageModuleKey key, Supplier<SModule> supplier) {
+        SModule module = modules.get(key);
+        if (module != null) return module;
+
+        module = supplier.get();
+        modules.put(key, module);
+        return module;
+    }
+
     /**
      * NOTE: The given map is a copy of the internal modules.
      *
@@ -63,13 +73,13 @@ public class ModuleManager {
         List<ModuleKey> duplicates = new ArrayList<>();
         for (SModule module : modules) {
             SModule oldModule = this.modules.putIfAbsent(module.getId(), module);
-            if (oldModule != null) {
+            if (oldModule != null && oldModule != module) {
                 duplicates.add(module.getId());
             }
         }
 
         if (!duplicates.isEmpty()) {
-            throw new DuplicateModuleException("Modules " + duplicates + " already exist!");
+            throw new DuplicateModuleException("Modules " + duplicates + " already exist!", duplicates);
         }
     }
 
@@ -84,8 +94,8 @@ public class ModuleManager {
      */
     public void addModule(SModule module) throws DuplicateModuleException {
         SModule oldModule = modules.putIfAbsent(module.getId(), module);
-        if (oldModule != null) {
-            throw new DuplicateModuleException("Module " + module.getId() + " already exists!");
+        if (oldModule != null && oldModule != module) {
+            throw new DuplicateModuleException("Module " + module.getId() + " already exists!", Collections.singletonList(module.getId()));
         }
     }
 

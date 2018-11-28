@@ -57,7 +57,7 @@ public class LanguageModuleKey extends ModuleKey {
     public String getPath() {
         if (parent == null) return language + LANGUAGE_SEPARATOR + name;
 
-        return parent.getPath() + PATH_SEPARATOR + name;
+        return getParent().getPath() + PATH_SEPARATOR + name;
     }
 
     @Override
@@ -65,19 +65,33 @@ public class LanguageModuleKey extends ModuleKey {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LanguageModuleKey other = (LanguageModuleKey) o;
-        return Objects.equals(name, other.name) &&
-                Objects.equals(parent, other.parent) &&
+
+        boolean x = Objects.equals(name, other.name) &&
+                Objects.equals(getParent(), other.getParent()) &&
                 Objects.equals(language, other.language);
+        if (!x && other.toString().equals(this.toString())) {
+            System.out.println("TAICO: WARNING: uneqal, but equal strings");
+            System.out.println(other.toString());
+        }
+        return x;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, parent, language);
+        return Objects.hash(name, getParent(), language);
     }
 
     @Override
     public String toString() {
         return getPath();
+    }
+
+    public String toIdentityString() {
+        if (parent == null) {
+            return "L=" + language + ", N=" + name + ", P=null";
+        } else {
+            return "L=" + language + ", N=" + name + ", P=" + getParent().toIdentityString();
+        }
     }
 
     /**

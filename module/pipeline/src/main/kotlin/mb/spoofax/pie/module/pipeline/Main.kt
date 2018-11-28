@@ -59,7 +59,7 @@ fun main(args: Array<String>) {
   LoadMetaLanguages.loadAll(workspaceDir)
   val pie = initPie(injector)
 
-  loadModules(workspaceDir)
+  loadModules(workspaceDir.parent()!!)
 
   // Run workspace build incrementally, with top-down executor (since we do not have a list of changed files here).
   val session = pie.topDownExecutor.newSession()
